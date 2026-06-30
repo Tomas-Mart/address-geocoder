@@ -6,15 +6,6 @@ variables:
   MYSQL_DATABASE: geocoder_db
   MYSQL_USER: geocoder_user
   MYSQL_PASSWORD: geocoder_pass
-  # Для Testcontainers:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""
-  TESTCONTAINERS_RYUK_DISABLED: "true"
-  TESTCONTAINERS_CHECKS_DISABLE: "true"
-
-services:
-  - mysql:8.0.36
-  - docker:27.0.3-dind
 
 cache:
   paths:
@@ -26,22 +17,16 @@ stages:
   - docker
   - deploy
 
-before_script:
-  - apt-get update -qq && apt-get install -y -qq jq docker.io
-
 test:
   stage: test
   script:
-    - echo "🐳 Проверка Docker..."
-    - docker info
-    - echo "🧪 Запуск тестов..."
-    - mvn clean test
+    - echo "🧪 Запуск тестов (CI режим)..."
+    - mvn clean test -Pci
     - mvn jacoco:report
   artifacts:
     when: always
     paths:
       - target/surefire-reports/
-      - target/site/jacoco/
     expire_in: 1 week
   coverage: '/Total.*?([0-9]{1,3})%/'
 
