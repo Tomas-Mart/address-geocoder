@@ -154,7 +154,3 @@ temp/
 *.swp
 *.swo
 *.~lock.*
-
-# Application specific
-screenshots/*.png
-!screenshots/.gitkeep
