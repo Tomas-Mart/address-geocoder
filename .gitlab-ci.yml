@@ -1,0 +1,93 @@
+image: maven:3.9.6-eclipse-temurin-17
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: geocoder_db
+  MYSQL_USER: geocoder_user
+  MYSQL_PASSWORD: geocoder_pass
+
+cache:
+  paths:
+    - .m2/repository/
+
+stages:
+  - test
+  - build
+  - docker
+
+services:
+  - mysql:8.0.36
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq jq
+
+# ============ STAGE: TEST ============
+
+test:
+  stage: test
+  script:
+    - echo "🧪 Запуск тестов..."
+    - mvn clean test
+    - mvn jacoco:report
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports/
+      - target/site/jacoco/
+    expire_in: 1 week
+  coverage: '/Total.*?([0-9]{1,3})%/
+
+# ============ STAGE: BUILD ============
+
+build:
+  stage: build
+  script:
+    - echo "📦 Сборка JAR..."
+    - mvn package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 week
+  only:
+    - main
+
+# ============ STAGE: DOCKER ============
+
+docker:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "🐳 Сборка Docker образа..."
+    - docker build -f docker/Dockerfile -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - echo "📤 Отправка образа в GitLab Container Registry..."
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  only:
+    - main
+
+# ============ STAGE: DEPLOY (опционально) ============
+
+deploy:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "🚀 Деплой на сервер..."
+    - docker pull $CI_REGISTRY_IMAGE:latest
+    - docker run -d -p 8080:8080 --name geocoder-app $CI_REGISTRY_IMAGE:latest
+  only:
+    - main
+  when: manual

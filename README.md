@@ -3,18 +3,24 @@
 [![Java Version](https://img.shields.io/badge/Java-17-blue.svg)](https://adoptium.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue.svg)](https://www.docker.com/)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
+[![CI/CD](https://github.com/Tomas-Mart/address-geocoder/actions/workflows/ci.yml/badge.svg)](https://github.com/Tomas-Mart/address-geocoder/actions)
+[![CI/CD](https://gitlab.com/kxsenia/address-geocoder/badges/main/pipeline.svg)](https://gitlab.com/kxsenia/address-geocoder/-/pipelines)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen.svg)]()
 
 - *Микросервис для геокодирования адресов с использованием Yandex Maps API и Dadata API.*
 
+---
+
 ## 📋 Описание
 
 *Сервис принимает текстовый адрес, получает координаты от двух внешних API, рассчитывает расстояние между ними и
 сохраняет результаты в базу данных.*
+
+---
 
 ### Основные функции
 
@@ -23,6 +29,8 @@
 - ✅ Расчет расстояния между координатами (формула гаверсинусов)
 - ✅ Сохранение результатов в MySQL
 - ✅ Сравнение результатов от двух API
+
+---
 
 ## ⭐ Ключевые особенности решения
 
@@ -36,6 +44,8 @@
 
 - *Данное решение полностью соответствует требованиям технического задания и демонстрирует профессиональный подход к
   разработке микросервисов на Java 17 с использованием лучших практик 2026 года.*
+
+---
 
 ## 🛠️ Технологии
 
@@ -51,14 +61,18 @@
 - Docker & Docker Compose
 - Testcontainers
 
+---
+
 ## 🏗️ Архитектура
 
 *Приложение построено на принципах Clean Architecture с разделением на слои:*
 
 - **Presentation** - REST контроллеры
-- **Application** - бизнес-логика и координация
 - **Domain** - доменная модель и правила
+- **Application** - бизнес-логика и координация
 - **Infrastructure** - внешние сервисы, БД, конфигурация
+
+---
 
 ## 📁 Структура проекта
 
@@ -81,12 +95,16 @@ address-geocoder/
 └── pom.xml
 ```
 
+---
+
 ## 📋 Требования к системе
 
-- **Docker** 24.0.0+ или **Java 17** (для локального запуска)
 - **Maven** 3.8.0+ (для локальной сборки)
-- **MySQL** 8.0 (для локального запуска без Docker)
 - **API ключи**: Yandex Maps API, Dadata API
+- **MySQL** 8.0 (для локального запуска без Docker)
+- **Docker** 24.0.0+ или **Java 17** (для локального запуска)
+
+---
 
 ## 🚀 **Инструкция по установке запуску**
 
@@ -100,24 +118,35 @@ address-geocoder/
 
 1. **Получите API ключи:**
 
-- [Yandex Maps API](https://developer.tech.yandex.ru/services)
 - [Dadata API](https://dadata.ru/api/geolocate/)
+- [Yandex Maps API](https://developer.tech.yandex.ru/services)
 
 2. **Клонируйте репозиторий:**
 
+**С GitHub:**
+
 ```bash
-git clone <repository-url>
+git clone https://github.com/Tomas-Mart/address-geocoder.git
 cd address-geocoder
 ```
 
-3. **Создайте файл .env с API ключами в корне проекта:**
+или
+
+**С GitLab:**
 
 ```bash
+git clone https://gitlab.com/kxsenia/address-geocoder.git
+cd address-geocoder
+```
+
+3. **Создайте файл .env с API ключами в папке docker:**
+
+```bash
+DB_USERNAME=geocoder_user
+DB_PASSWORD=geocoder_pass
 YANDEX_API_KEY=your_yandex_api_key_here
 DADATA_API_KEY=your_dadata_api_key_here
 DADATA_SECRET_KEY=your_dadata_secret_key_here
-DB_USERNAME=geocoder_user
-DB_PASSWORD=geocoder_pass
 ```
 
 4. **Запустите приложение с помощью Docker Compose:**
@@ -156,6 +185,8 @@ mvn clean package
 java -jar target/address-geocoder-*.jar
 ```
 
+---
+
 ## 🔌 API Документация
 
 ### POST /api/address/geocode
@@ -192,6 +223,8 @@ curl -X POST http://localhost:8080/api/address/geocode \
   "processingStatus": "SUCCESS"
 }
 ```
+
+---
 
 ## 📸 Демонстрация работы
 
@@ -287,10 +320,12 @@ mvn test
 
 ### Интеграционные тесты используют Testcontainers и поднимают реальную MySQL.
 
+---
+
 ## 📊 Мониторинг
 
-- **Health Check:** http://localhost:8080/actuator/health
 - **Метрики:** http://localhost:8080/actuator/metrics
+- **Health Check:** http://localhost:8080/actuator/health
 - **Prometheus:** http://localhost:8080/actuator/prometheus
 
 ## 🔧 Конфигурация
@@ -348,14 +383,14 @@ app:
 
 ### Ошибка: Connection refused (MySQL)
 
-- Убедитесь, что MySQL запущен: `docker-compose ps`
 - Проверьте порт 3306: `sudo lsof -i :3306`
+- Убедитесь, что MySQL запущен: `docker-compose ps`
 
 ## 📈 Производительность
 
-- Connection Pool: HikariCP (макс. 10 соединений)
 - Таймауты: 5 секунд на внешние вызовы
 - Circuit Breaker: Защита от каскадных отказов
+- Connection Pool: HikariCP (макс. 10 соединений)
 - Retry: Автоматические повторные попытки при временных ошибках
 
 ## 🔒 Безопасность
@@ -367,14 +402,14 @@ app:
 
 ## 🚀 Деплой
 
-*Приложение готово к деплою в Kubernetes.*
 *Пример Helm-чарта доступен по запросу.*
+*Приложение готово к деплою в Kubernetes.*
 
 ## 📝 TODO
 
 - [ ] Добавить кэширование (Redis)
-- [ ] Настроить распределенную трассировку (Jaeger)
 - [ ] Добавить асинхронную обработку через Kafka
+- [ ] Настроить распределенную трассировку (Jaeger)
 - [ ] Реализовать эндпоинты для получения истории запросов
 
 ## 👨‍💻 Автор
@@ -403,10 +438,19 @@ app:
 - [Официальная оферта](https://yandex.ru/legal/maps_api_offer/)
 - [Условия использования API Геокодера](https://yandex.ru/dev/tariffs/doc/ru/geocoder/terms/)
 
+---
+
+## 🔗 Репозитории
+
+- **GitLab:** https://gitlab.com/kxsenia/address-geocoder
+- **GitHub:** https://github.com/Tomas-Mart/address-geocoder
+
+---
+
 ## 🔗 Полезные ссылки
 
+- **Grafana Dashboard**: http://localhost:3000
+- **Health Check**: http://localhost:8080/actuator/health
 - **Swagger UI**: http://localhost:8080/swagger-ui/index.html
 - **OpenAPI Specification**: http://localhost:8080/v3/api-docs
-- **Health Check**: http://localhost:8080/actuator/health
 - **Prometheus Metrics**: http://localhost:8080/actuator/prometheus
-- **Grafana Dashboard**: http://localhost:3000
