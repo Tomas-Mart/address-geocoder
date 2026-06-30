@@ -10,10 +10,11 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   TESTCONTAINERS_RYUK_DISABLED: "true"
+  TESTCONTAINERS_CHECKS_DISABLE: "true"
 
 services:
   - mysql:8.0.36
-  - docker:dind
+  - docker:27.0.3-dind
 
 cache:
   paths:
@@ -26,11 +27,13 @@ stages:
   - deploy
 
 before_script:
-  - apt-get update -qq && apt-get install -y -qq jq
+  - apt-get update -qq && apt-get install -y -qq jq docker.io
 
 test:
   stage: test
   script:
+    - echo "🐳 Проверка Docker..."
+    - docker info
     - echo "🧪 Запуск тестов..."
     - mvn clean test
     - mvn jacoco:report
