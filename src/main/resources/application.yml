@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: address-geocoder
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:geocoder_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:geocoder_user}
+    password: ${DB_PASSWORD:geocoder_pass}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        show_sql: false
+        use_sql_comments: true
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+
+# Внешние API клиенты
+api:
+  yandex:
+    url: https://geocode-maps.yandex.ru/v1
+    api-key: ${YANDEX_API_KEY:your-yandex-api-key}
+    timeout: 10000
+
+  dadata:
+    url: https://cleaner.dadata.ru/api/v1/clean/address
+    api-key: ${DADATA_API_KEY:your-dadata-api-key}
+    secret-key: ${DADATA_SECRET_KEY:your-dadata-secret-key}
+    timeout: 5000
+
+# Настройки приложения
+app:
+  distance:
+    earth-radius: 6371000
+  geocoding:
+    timeout: 15
+
+# Логирование
+logging:
+  level:
+    com.example.geocoder: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true

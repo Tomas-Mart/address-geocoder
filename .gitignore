@@ -1,0 +1,160 @@
+# Compiled class file
+*.class
+
+# Log files
+*.log
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+gen/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# OS Specific
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# Docker
+docker-compose.override.yml
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Application logs
+logs/
+*.log.*
+
+# Application properties
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# Test coverage
+.idea/coverage/
+*.exec
+*.emma
+*.ec
+*.jacoco
+html/
+*.html
+*.xml
+*.ser
+*.crc
+*.json
+
+# Spring Boot
+.springBeans
+.sts4-cache
+*.pid
+*.lock
+*.versionsBackup
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Native
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# Runtime data
+pids/
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+.nyc_output
+
+# Node.js
+node_modules/
+jspm_packages/
+.npm
+.eslintcache
+*.tgz
+.yarn-integrity
+.cache
+.next
+.nuxt
+dist
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*.~lock.*
+
+# Application specific
+screenshots/*.png
+!screenshots/.gitkeep

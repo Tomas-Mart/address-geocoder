@@ -1,0 +1,60 @@
+services:
+  mysql:
+    image: mysql:8.0.36
+    container_name: geocoder-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: geocoder_db
+      MYSQL_USER: geocoder_user
+      MYSQL_PASSWORD: geocoder_pass
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - geocoder-network
+
+  app:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: geocoder-app
+    environment:
+      # База данных
+      DB_USERNAME: geocoder_user
+      DB_PASSWORD: geocoder_pass
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/geocoder_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
+      # API ключи
+      YANDEX_API_KEY: ${YANDEX_API_KEY}
+      DADATA_API_KEY: ${DADATA_API_KEY}
+      DADATA_SECRET_KEY: ${DADATA_SECRET_KEY}
+
+      # JVM настройки
+      JAVA_OPTS: -Xms256m -Xmx512m -XX:+UseG1GC
+
+      # Приложение
+      APP_PROFILE: dev
+      LOG_LEVEL: DEBUG
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - geocoder-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  geocoder-network:
+    driver: bridge
