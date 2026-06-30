@@ -15,13 +15,18 @@ stages:
   - test
   - build
   - docker
-  - deploy  # ← ДОБАВЛЕНО
+  - deploy
 
 services:
   - mysql:8.0.36
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq jq
+  - echo "📁 Текущая директория: $(pwd)"
+  - echo "📁 Содержимое директории:"
+  - ls -la
+  - echo "📁 Проверка наличия pom.xml:"
+  - ls -la pom.xml || echo "❌ pom.xml не найден!"
 
 # ============ STAGE: TEST ============
 
