@@ -22,11 +22,6 @@ services:
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq jq
-  - echo "📁 Текущая директория: $(pwd)"
-  - echo "📁 Содержимое директории:"
-  - ls -la
-  - echo "📁 Проверка наличия pom.xml:"
-  - ls -la pom.xml || echo "❌ pom.xml не найден!"
 
 test:
   stage: test
