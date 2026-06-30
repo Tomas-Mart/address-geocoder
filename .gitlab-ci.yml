@@ -6,6 +6,14 @@ variables:
   MYSQL_DATABASE: geocoder_db
   MYSQL_USER: geocoder_user
   MYSQL_PASSWORD: geocoder_pass
+  # Для Testcontainers:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  TESTCONTAINERS_RYUK_DISABLED: "true"
+
+services:
+  - mysql:8.0.36
+  - docker:dind  # ← ДОБАВИТЬ ЭТО
 
 cache:
   paths:
@@ -16,9 +24,6 @@ stages:
   - build
   - docker
   - deploy
-
-services:
-  - mysql:8.0.36
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq jq
